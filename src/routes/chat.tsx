@@ -157,20 +157,20 @@ function ChatPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 px-5 py-3">
-          <button className="rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white">
+        <div className="flex items-center gap-1.5 px-4 py-3">
+          <button className="whitespace-nowrap rounded-md bg-blue-600 px-2.5 py-1.5 text-xs font-semibold text-white">
             My Chats
           </button>
-          <button className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted">
+          <button className="inline-flex items-center gap-1 whitespace-nowrap rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted">
             <Sparkles className="h-3 w-3 text-blue-600" /> Qualified
           </button>
-          <button className="inline-flex items-center gap-1 rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted">
-            <Sparkles className="h-3 w-3 text-blue-600" /> Pote
+          <button className="inline-flex items-center gap-1 overflow-hidden whitespace-nowrap rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-muted">
+            <Sparkles className="h-3 w-3 shrink-0 text-blue-600" /> Pote
           </button>
-          <button className="ml-auto flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted">
+          <button className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted">
             <Search className="h-4 w-4" />
           </button>
-          <button className="relative flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted">
+          <button className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted">
             <SlidersHorizontal className="h-4 w-4" />
             <span className="absolute right-0.5 top-0.5 h-1.5 w-1.5 rounded-full bg-blue-600" />
           </button>
