@@ -76,11 +76,13 @@ function StatChip({
   value,
   label,
   tone = "muted",
+  onClick,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   value: number;
   label: string;
   tone?: "muted" | "amber" | "rose" | "blue" | "emerald" | "sky";
+  onClick?: () => void;
 }) {
   const tones: Record<string, string> = {
     muted: "text-muted-foreground",
@@ -91,10 +93,13 @@ function StatChip({
     sky: "text-sky-600",
   };
   return (
-    <span className={`inline-flex items-center gap-1 text-xs ${tones[tone]}`}>
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-1 text-xs ${tones[tone]} ${onClick ? "cursor-pointer hover:opacity-80" : ""}`}
+    >
       <Icon className="h-3.5 w-3.5" />
       {value} {label}
-    </span>
+    </button>
   );
 }
 
