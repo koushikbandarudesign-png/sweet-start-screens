@@ -16,8 +16,16 @@ import {
   CornerUpLeft,
   ExternalLink,
   Send,
+  X,
+  Search,
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/broadcast")({
   head: () => ({
