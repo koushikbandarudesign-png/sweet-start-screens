@@ -445,7 +445,7 @@ function MessageBlock({
             value={s.value}
             label={s.label}
             tone={s.tone}
-            onClick={onStatClick && s.value > 0 ? () => onStatClick(s, body) : undefined}
+            onClick={onStatClick ? () => onStatClick(s, body) : undefined}
           />
         ))}
       </div>
