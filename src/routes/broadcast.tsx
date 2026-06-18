@@ -151,7 +151,6 @@ function BroadcastPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleStatClick = (stat: Stat, messageBody: React.ReactNode) => {
-    if (stat.value === 0) return;
     setModalStat({ label: stat.label, tone: stat.tone, body: messageBody });
     setSearchQuery("");
     setModalOpen(true);
@@ -446,7 +445,7 @@ function MessageBlock({
             value={s.value}
             label={s.label}
             tone={s.tone}
-            onClick={onStatClick && s.value > 0 ? () => onStatClick(s, body) : undefined}
+            onClick={onStatClick ? () => onStatClick(s, body) : undefined}
           />
         ))}
       </div>
