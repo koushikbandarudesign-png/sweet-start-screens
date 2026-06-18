@@ -16,7 +16,6 @@ import {
   CornerUpLeft,
   ExternalLink,
   Send,
-  X,
   Search,
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -71,6 +70,45 @@ const jobs: Job[] = [
   { id: "502431", title: "Scrum Master", badge: 1 },
 ];
 
+type Person = {
+  initials: string;
+  name: string;
+  role: string;
+  status: string;
+};
+
+const modalPeopleData: Record<string, Person[]> = {
+  Failed: [
+    { initials: "PK", name: "Poojitha Konanki", role: "Cloud Engineer", status: "Failed" },
+    { initials: "AK", name: "Anjal Karki", role: "Software Engineer", status: "Failed" },
+    { initials: "TM", name: "Tejas Maladwala", role: "Senior Lead Software Engineer", status: "Failed" },
+  ],
+  Skipped: [
+    { initials: "PK", name: "Poojitha Konanki", role: "Cloud Engineer", status: "Skipped" },
+    { initials: "AK", name: "Anjal Karki", role: "Software Engineer", status: "Skipped" },
+    { initials: "TM", name: "Tejas Maladwala", role: "Senior Lead Software Engineer", status: "Skipped" },
+  ],
+  Pending: [
+    { initials: "PK", name: "Poojitha Konanki", role: "Cloud Engineer", status: "Pending" },
+  ],
+  Scheduled: [
+    { initials: "AK", name: "Anjal Karki", role: "Software Engineer", status: "Scheduled" },
+  ],
+  Sent: [
+    { initials: "TM", name: "Tejas Maladwala", role: "Senior Lead Software Engineer", status: "Sent" },
+  ],
+  Delivered: [
+    { initials: "PK", name: "Poojitha Konanki", role: "Cloud Engineer", status: "Delivered" },
+    { initials: "AK", name: "Anjal Karki", role: "Software Engineer", status: "Delivered" },
+  ],
+  Read: [
+    { initials: "TM", name: "Tejas Maladwala", role: "Senior Lead Software Engineer", status: "Read" },
+  ],
+  Replied: [
+    { initials: "PK", name: "Poojitha Konanki", role: "Cloud Engineer", status: "Replied" },
+  ],
+};
+
 function StatChip({
   icon: Icon,
   value,
@@ -106,6 +144,24 @@ function StatChip({
 function BroadcastPage() {
   const [openJobs, setOpenJobs] = useState<Record<number, boolean>>(
     Object.fromEntries(jobs.map((j, i) => [i, j.expanded ?? true])),
+  );
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalStat, setModalStat] = useState<{ label: string; tone: string; body: React.ReactNode } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleStatClick = (stat: Stat, messageBody: React.ReactNode) => {
+    if (stat.value === 0) return;
+    setModalStat({ label: stat.label, tone: stat.tone, body: messageBody });
+    setSearchQuery("");
+    setModalOpen(true);
+  };
+
+  const people = modalStat ? (modalPeopleData[modalStat.label] ?? []) : [];
+  const filteredPeople = people.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.role.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -218,6 +274,7 @@ function BroadcastPage() {
               { icon: CheckCircle2, value: 0, label: "Read", tone: "emerald" as const },
               { icon: CornerUpLeft, value: 1, label: "Replied", tone: "blue" as const },
             ]}
+            onStatClick={handleStatClick}
           />
 
           <MessageBlock
@@ -244,6 +301,7 @@ function BroadcastPage() {
               { icon: CheckCircle2, value: 0, label: "Read", tone: "emerald" as const },
               { icon: CornerUpLeft, value: 0, label: "Replied", tone: "blue" as const },
             ]}
+            onStatClick={handleStatClick}
           />
         </div>
 
@@ -260,6 +318,75 @@ function BroadcastPage() {
           </div>
         </div>
       </div>
+
+      {/* Stat Detail Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="max-w-xl p-0 overflow-hidden">
+          <div className="p-6 pb-0">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
+                <span className="h-5 w-1 rounded-full bg-blue-500" />
+                {modalStat?.label}
+              </DialogTitle>
+            </DialogHeader>
+
+            {/* Message Preview */}
+            <div className="mb-6 rounded-xl border border-border bg-muted/30 p-4">
+              <div className="mb-2 text-right text-sm font-medium">Ashlesh</div>
+              <div className="rounded-2xl rounded-tr-sm bg-blue-50/70 px-4 py-3 text-sm leading-relaxed ring-1 ring-blue-100 dark:bg-blue-950/30 dark:ring-blue-900">
+                <div className="mb-1">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                </div>
+                {modalStat?.body}
+              </div>
+            </div>
+
+            {/* People Section */}
+            <div className="mb-3 flex items-center gap-2 text-base font-semibold">
+              <span className="h-5 w-1 rounded-full bg-blue-500" />
+              People
+            </div>
+
+            {/* Search */}
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-4 text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </div>
+          </div>
+
+          {/* People List */}
+          <div className="max-h-[320px] overflow-y-auto px-6 pb-6">
+            <div className="space-y-2">
+              {filteredPeople.map((person, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 rounded-lg border border-border bg-card p-3"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-semibold text-blue-700">
+                    {person.initials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium">{person.name}</div>
+                    <div className="text-xs text-muted-foreground">{person.role}</div>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground">
+                    {person.status}
+                  </span>
+                </div>
+              ))}
+              {filteredPeople.length === 0 && (
+                <div className="py-8 text-center text-sm text-muted-foreground">No results found</div>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -277,12 +404,14 @@ function MessageBlock({
   title,
   body,
   stats,
+  onStatClick,
 }: {
   author: string;
   authorMeta?: string;
   title: React.ReactNode;
   body: React.ReactNode;
   stats: Stat[];
+  onStatClick?: (stat: Stat, body: React.ReactNode) => void;
 }) {
   return (
     <div>
@@ -311,7 +440,14 @@ function MessageBlock({
       </div>
       <div className="mt-2 flex flex-wrap justify-end gap-x-4 gap-y-1 pr-12">
         {stats.map((s, i) => (
-          <StatChip key={i} icon={s.icon} value={s.value} label={s.label} tone={s.tone} />
+          <StatChip
+            key={i}
+            icon={s.icon}
+            value={s.value}
+            label={s.label}
+            tone={s.tone}
+            onClick={onStatClick && s.value > 0 ? () => onStatClick(s, body) : undefined}
+          />
         ))}
       </div>
     </div>
